@@ -27,7 +27,7 @@ Flask (optional for deployment)
 ├── utils.py             # Helper functions
 └── README.md
 ⚙️ Installation
-git clone https://github.com/your-username/instagram-caption-generator.git
+git clone https://github.com/gabrielrawan/instagram-caption-generator.git
 cd instagram-caption-generator
 pip install -r requirements.txt
 ▶️ Usage
