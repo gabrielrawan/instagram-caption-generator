@@ -1,57 +1,53 @@
-# instagram-caption-generator
-Gerador de Legendas para Instagram feito com HTML, CSS e JavaScript
-📸 Instagram Caption Generator (AI)
+# 📸 Instagram Caption Generator
 
-An AI-powered application that generates engaging Instagram captions from images using deep learning techniques.
+A tool that generates Instagram captions based on image input.
 
-🚀 Overview
+## 🚀 Overview
 
-This project combines Computer Vision and Natural Language Processing to automatically generate captions for images. It uses a CNN-based encoder to extract visual features and an LSTM-based decoder to generate human-like text descriptions.
+This project provides a practical solution for generating captions from images. It processes visual input and returns relevant text output, making it useful for content creation workflows.
 
-🧠 Features
-Generate captions from images
-Deep learning pipeline (CNN + LSTM)
-Pretrained model support
-Custom dataset training capability
-Modular and scalable architecture
-🛠️ Tech Stack
-Python
-TensorFlow / Keras
-NumPy
-Flask (optional for deployment)
-📂 Project Structure
-├── data/                # Dataset (not included due to size)
-├── models/              # Trained models
-├── notebooks/           # Experiments and training
-├── app.py               # Web app (if applicable)
-├── utils.py             # Helper functions
+The focus is on usability, simplicity, and fast results.
+
+## ✨ Features
+
+* Generate captions from images
+* Simple and direct usage
+* Fast processing
+* Easily adaptable for different use cases
+
+## 🛠️ Tech Stack
+
+* Python
+
+## ▶️ Usage
+
+Run the project locally and provide an image as input to receive a generated caption.
+
+## 📂 Project Structure
+
+```bash
+├── data/        
+├── models/      
+├── app.py       
+├── utils.py     
 └── README.md
-⚙️ Installation
-git clone https://github.com/gabrielrawan/instagram-caption-generator.git
+```
+
+## 🔧 Setup
+
+```bash
+git clone https://github.com/gabriel/instagram-caption-generator.git
 cd instagram-caption-generator
 pip install -r requirements.txt
-▶️ Usage
-python app.py
+```
 
-Upload an image and receive generated captions.
+## 🔮 Future Improvements
 
-📊 Model Details
-Encoder: Convolutional Neural Network (e.g., InceptionV3 / ResNet)
-Decoder: LSTM-based sequence generator
-Tokenization: Word-level tokenizer
-Loss Function: Categorical Crossentropy
-📌 Notes
-Dataset is not included due to size limitations.
-You can train the model using publicly available datasets such as Flickr8k or MSCOCO.
-🔮 Future Improvements
-Web UI improvements
-Multiple caption styles (formal, casual, marketing)
-Hashtag generation
-API deployment
-🤝 Contributing
+* Improve caption quality
+* Add multiple caption styles
+* Include hashtag generation
+* Create a web interface
 
-Contributions are welcome. Feel free to fork and improve the project.
+## 📄 License
 
-📄 License
-
-This project is open-source and available under the MIT License.
+MIT License
