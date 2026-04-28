@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Legendas Instagram</title>
+  <style>
+    :root {
+      --bg-1: #0f0a1f;
+      --bg-2: #1b1232;
+      --card: rgba(34, 22, 62, 0.78);
+      --card-border: rgba(255, 255, 255, 0.14);
+      --text: #f5efff;
+      --muted: #d5c7f3;
+      --accent: #ff4fd8;
+      --accent-2: #9e6bff;
+      --success: #3bd68c;
+      --shadow: 0 18px 50px rgba(5, 0, 15, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 15%, #3c1a68 0%, transparent 45%),
+        radial-gradient(circle at 80% 0%, #57239d 0%, transparent 38%),
+        linear-gradient(145deg, var(--bg-1), var(--bg-2));
+      padding: 22px 14px 28px;
+    }
+
+    .container {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      padding: 22px;
+    }
+
+    h1 {
+      margin: 4px 0 6px;
+      font-size: clamp(2rem, 7vw, 3.3rem);
+      text-align: center;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      background: linear-gradient(90deg, #ffffff, #fbb6ff 36%, #bc95ff 72%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      margin: 0 0 20px;
+      font-size: clamp(0.95rem, 2.8vw, 1.08rem);
+    }
+
+    .top-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .panel-title {
+      margin: 0 0 12px;
+      font-weight: 700;
+      font-size: 0.96rem;
+      color: #e8d7ff;
+    }
+
+    .custom-file-upload {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      box-shadow: 0 10px 25px rgba(172, 95, 255, 0.35);
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .custom-file-upload:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+    }
+
+    #photo {
+      display: none;
+    }
+
+    .file-name {
+      margin: 10px 2px 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      word-break: break-all;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .select-style {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(12, 8, 28, 0.75);
+      color: #f7f0ff;
+      padding: 10px;
+      font-size: 0.92rem;
+      outline: none;
+    }
+
+    .action-btn {
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border-radius: 10px;
+      font-weight: 700;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: transform 0.2s ease, filter 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+    }
+
+    .action-btn[disabled] {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .preview-wrap {
+      aspect-ratio: 1 / 1;
+      border-radius: 12px;
+      border: 1px dashed rgba(255, 255, 255, 0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    .preview-placeholder {
+      margin: 0;
+      text-align: center;
+      color: #c8b8eb;
+      font-size: 0.92rem;
+      line-height: 1.4;
+      padding: 8px;
+    }
+
+    .img-preview {
+      display: none;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .caption-list {
+      display: none;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .caption {
+      background: rgba(14, 8, 30, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 148px;
+    }
+
+    .caption-text {
+      margin: 0;
+      color: #efe7ff;
+      font-size: 0.98rem;
+      line-height: 1.48;
+      white-space: pre-line;
+      word-break: break-word;
+    }
+
+    .copy-btn {
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: linear-gradient(90deg, #562ac8, #8f48ff);
+      color: #fff;
+      border-radius: 10px;
+      font-weight: 700;
+      padding: 9px 12px;
+      cursor: pointer;
+      transition: transform 0.2s ease, filter 0.2s ease;
+      align-self: flex-start;
+    }
+
+    .copy-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.1);
+    }
+
+    .copy-btn.is-copied {
+      background: linear-gradient(90deg, #1cae63, var(--success));
+    }
+
+    .caption-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #f0e7ff;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      padding: 4px 8px;
+      border-radius: 999px;
+    }
+
+    .char-count {
+      color: #c9b8ec;
+      font-size: 0.76rem;
+      font-weight: 600;
+    }
+
+    .status {
+      margin: 0 0 10px;
+      color: #dfd0ff;
+      font-size: 0.9rem;
+      min-height: 20px;
+    }
+
+    .status.ok {
+      color: #a8f3ca;
+    }
+
+    .status.warn {
+      color: #ffd6a0;
+    }
+
+    @media (max-width: 780px) {
+      .container {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .top-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .caption-list {
+        grid-template-columns: 1fr;
+      }
+
+      .caption {
+        min-height: 128px;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Gerador de Legendas Instagram</h1>
+    <p class="subtitle">Envie uma foto e receba legendas criativas com emojis e hashtags relevantes.</p>
+
+    <div class="top-grid">
+      <div class="panel">
+        <p class="panel-title">1) Envie sua foto</p>
+        <label for="photo" class="custom-file-upload">Subir Foto 📸</label>
+        <input type="file" accept="image/*" id="photo">
+        <p class="file-name" id="fileName">Nenhuma foto selecionada.</p>
+        <div class="controls">
+          <select id="styleSelect" class="select-style">
+            <option value="viral">Estilo: Viral / Engajamento</option>
+            <option value="elegante">Estilo: Elegante / Premium</option>
+            <option value="humor">Estilo: Leve / Humor</option>
+            <option value="vendas">Estilo: Vendas / Produto</option>
+          </select>
+          <button id="refreshBtn" class="action-btn" type="button" disabled>Gerar novas</button>
+          <button id="copyAllBtn" class="action-btn" type="button" disabled>Copiar todas</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <p class="panel-title">2) Preview da imagem</p>
+        <div class="preview-wrap">
+          <img class="img-preview" id="imgPreview" alt="Preview da foto enviada">
+          <p class="preview-placeholder" id="previewPlaceholder">Preview da foto aparece aqui</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="status" id="statusMessage"></p>
+    <div class="caption-list" id="captionList"></div>
+  </div>
+
+  <script>
+    const photoInput = document.getElementById("photo");
+    const imgPreview = document.getElementById("imgPreview");
+    const captionList = document.getElementById("captionList");
+    const previewPlaceholder = document.getElementById("previewPlaceholder");
+    const fileName = document.getElementById("fileName");
+    const styleSelect = document.getElementById("styleSelect");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const copyAllBtn = document.getElementById("copyAllBtn");
+    const statusMessage = document.getElementById("statusMessage");
+    let fotoSelecionada = false;
+    let legendasAtuais = [];
+
+    function randomFromArray(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    const aberturaBase = [
+      "Hoje o feed ganhou brilho extra",
+      "Essa foto merece palco",
+      "Mood ativado com sucesso",
+      "Entre luzes, cores e energia boa",
+      "Um clique e mil sensacoes boas",
+      "Quando a foto fala por si",
+      "Aquela vibe que nao se explica"
+    ];
+
+    const complementoBase = [
+      "e eu to vivendo cada segundo.",
+      "com coracao leve e sorriso largo.",
+      "porque detalhe bonito faz diferenca.",
+      "com energia de protagonista.",
+      "e uma dose de autoestima no alto.",
+      "pra lembrar que o simples tambem encanta.",
+      "do jeitinho que eu gosto."
+    ];
+
+    const estilos = {
+      viral: {
+        abertura: [...aberturaBase, "Tem foto que para o scroll na hora"],
+        complemento: [...complementoBase, "e com vontade de repetir esse momento."],
+        cta: [
+          "Comenta aqui: qual nota essa foto merece?",
+          "Marca aquela pessoa que ia amar esse clique!",
+          "Se curtiu, deixa um emoji aqui nos comentarios!"
+        ],
+        hashtags: ["#Explorar", "#TrendingNow", "#FeedPerfeito"]
+      },
+      elegante: {
+        abertura: [
+          "Elegancia em cada detalhe",
+          "Menos excesso, mais presenca",
+          "Uma composicao de classe e personalidade",
+          "Quando sofisticacao encontra autenticidade"
+        ],
+        complemento: [
+          "com uma estetica que fala por si.",
+          "e um toque refinado em cada angulo.",
+          "com charme sutil e muita atitude.",
+          "para quem aprecia beleza com intencao."
+        ],
+        cta: [
+          "Qual detalhe te chamou mais atencao?",
+          "Salva para inspirar seu proximo post.",
+          "Me conta: voce iria com essa vibe?"
+        ],
+        hashtags: ["#Elegancia", "#EstiloPremium", "#VisualRefinado"]
+      },
+      humor: {
+        abertura: [
+          "Saiu foto boa sem sofrimento, milagre",
+          "Passei no teste do espelho e vim pro feed",
+          "A foto ficou tao boa que ate eu duvidei",
+          "Autoestima carregada e senso de humor tambem"
+        ],
+        complemento: [
+          "e sim, eu tambem repeti 38 poses.",
+          "com direito a close e risada no final.",
+          "porque ser basico nao tava no roteiro.",
+          "e eu aceito elogios sem modesta."
+        ],
+        cta: [
+          "Se essa legenda te representa, manda um hahaha.",
+          "Qual legenda define sua semana?",
+          "Marca o amigo que faz ensaio de 200 fotos."
+        ],
+        hashtags: ["#HumorNoFeed", "#RindoSozinho", "#VidaRealSemFiltro"]
+      },
+      vendas: {
+        abertura: [
+          "Produto em destaque no feed de hoje",
+          "Apresentando esse detalhe que faz diferenca",
+          "Quando qualidade e estilo andam juntos",
+          "Pronto para elevar seu visual com personalidade"
+        ],
+        complemento: [
+          "com acabamento impecavel e muito bom gosto.",
+          "feito para quem busca resultado de verdade.",
+          "e um visual pensado para impressionar.",
+          "com estilo e versatilidade no dia a dia."
+        ],
+        cta: [
+          "Quer infos e valores? Chama no direct.",
+          "Se interessou? Comenta EU QUERO.",
+          "Disponivel por tempo limitado. Fale comigo!"
+        ],
+        hashtags: ["#CompreAgora", "#ProdutoDestaque", "#NovidadeNoFeed"]
+      }
+    };
+
+    const emojis = ["✨", "🔥", "💜", "💖", "🌟", "📸", "😍", "🤩", "🌈", "🦋", "💫", "🥰", "👑", "🎉", "🚀", "🖤"];
+
+    const hashtagsBase = [
+      "#InstagramBrasil",
+      "#LegendaDoDia",
+      "#FeedInspiration",
+      "#VibeBoa",
+      "#PhotoOfTheDay",
+      "#InstaMood",
+      "#MomentoPerfeito",
+      "#Autoestima",
+      "#ConteudoCriativo",
+      "#Estetica",
+      "#VidaReal",
+      "#BoasEnergias",
+      "#DestaqueNoFeed",
+      "#SemFiltro",
+      "#ClickDoDia",
+      "#CriadoresDeConteudo",
+      "#FeedAesthetic",
+      "#PostDoDia"
+    ];
+
+    function pickHashtags(qtd, extras = []) {
+      const pool = [...hashtagsBase, ...extras];
+      const chosen = [];
+      for (let i = 0; i < qtd && pool.length > 0; i += 1) {
+        const idx = Math.floor(Math.random() * pool.length);
+        chosen.push(pool[idx]);
+        pool.splice(idx, 1);
+      }
+      return chosen.join(" ");
+    }
+
+    function gerarLegendaCriativa(estilo) {
+      const dados = estilos[estilo] || estilos.viral;
+      const emoji1 = randomFromArray(emojis);
+      const emoji2 = randomFromArray(emojis);
+      const emoji3 = randomFromArray(emojis);
+      const base = `${randomFromArray(dados.abertura)} ${randomFromArray(dados.complemento)} ${emoji1} ${emoji2}`;
+      const callToAction = `${randomFromArray(dados.cta)} ${emoji3}`;
+      return `${base}\n${callToAction}\n\n${pickHashtags(5, dados.hashtags)}`;
+    }
+
+    function gerarLegendas(qtd = 6, estilo = "viral") {
+      const legends = [];
+      while (legends.length < qtd) {
+        legends.push(gerarLegendaCriativa(estilo));
+      }
+      return legends;
+    }
+
+    function setStatus(msg, type = "") {
+      statusMessage.textContent = msg;
+      statusMessage.className = "status";
+      if (type) statusMessage.classList.add(type);
+    }
+
+    async function copyText(text, button) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const temp = document.createElement("textarea");
+          temp.value = text;
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand("copy");
+          document.body.removeChild(temp);
+        }
+        button.textContent = "Copiado!";
+        button.classList.add("is-copied");
+      } catch (err) {
+        button.textContent = "Falhou";
+      } finally {
+        setTimeout(() => {
+          button.textContent = "Copiar";
+          button.classList.remove("is-copied");
+        }, 1400);
+      }
+    }
+
+    function renderLegendas(legendas, estilo) {
+      captionList.innerHTML = "";
+      legendas.forEach((texto, idx) => {
+        const card = document.createElement("div");
+        card.className = "caption";
+
+        const top = document.createElement("div");
+        top.className = "caption-top";
+        const badge = document.createElement("span");
+        badge.className = "badge";
+        badge.textContent = `${estilo.toUpperCase()} • Opção ${idx + 1}`;
+        const count = document.createElement("span");
+        count.className = "char-count";
+        count.textContent = `${texto.length} caracteres`;
+        top.appendChild(badge);
+        top.appendChild(count);
+
+        const p = document.createElement("p");
+        p.className = "caption-text";
+        p.textContent = texto;
+
+        const btn = document.createElement("button");
+        btn.className = "copy-btn";
+        btn.type = "button";
+        btn.textContent = "Copiar";
+        btn.addEventListener("click", () => copyText(texto, btn));
+
+        card.appendChild(top);
+        card.appendChild(p);
+        card.appendChild(btn);
+        captionList.appendChild(card);
+      });
+      captionList.style.display = "grid";
+    }
+
+    function gerarEExibirLegendas() {
+      if (!fotoSelecionada) {
+        setStatus("Envie uma foto primeiro para gerar legendas.", "warn");
+        return;
+      }
+      const estilo = styleSelect.value;
+      legendasAtuais = gerarLegendas(6, estilo);
+      renderLegendas(legendasAtuais, estilo);
+      setStatus(`6 legendas no estilo "${estilo}" prontas para copiar.`, "ok");
+      refreshBtn.disabled = false;
+      copyAllBtn.disabled = false;
+    }
+
+    refreshBtn.addEventListener("click", gerarEExibirLegendas);
+    styleSelect.addEventListener("change", () => {
+      if (fotoSelecionada) gerarEExibirLegendas();
+    });
+    copyAllBtn.addEventListener("click", async () => {
+      if (!legendasAtuais.length) return;
+      const pack = legendasAtuais.join("\n\n--------------------\n\n");
+      await copyText(pack, copyAllBtn);
+      setStatus("Todas as legendas foram copiadas de uma vez.", "ok");
+    });
+
+    photoInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file || !file.type.startsWith("image/")) {
+        fotoSelecionada = false;
+        fileName.textContent = "Nenhuma foto selecionada.";
+        imgPreview.style.display = "none";
+        previewPlaceholder.style.display = "block";
+        captionList.style.display = "none";
+        refreshBtn.disabled = true;
+        copyAllBtn.disabled = true;
+        setStatus("Selecione uma imagem valida para continuar.", "warn");
+        return;
+      }
+
+      fotoSelecionada = true;
+      fileName.textContent = file.name;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        imgPreview.src = ev.target.result;
+        imgPreview.style.display = "block";
+        previewPlaceholder.style.display = "none";
+        gerarEExibirLegendas();
+      };
+      reader.readAsDataURL(file);
+    });
+  </script>
+</body>
+</html>
