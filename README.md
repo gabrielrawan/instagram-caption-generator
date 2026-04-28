@@ -1,35 +1,45 @@
 # 📸 Instagram Caption Generator
 
-A tool that generates Instagram captions based on image input.
+A fast and accessible tool designed to generate Instagram captions for anyone, completely free to use.
 
-## 🚀 Overview
+## Overview
 
-This project provides a simple way to generate captions from images. It processes an input image and returns a relevant caption.
+**Instagram Caption Generator** helps users quickly create captions for their posts using a simple and direct workflow.
 
-The focus is on simplicity and fast results.
+It is built for everyday use, making content creation faster and more practical for individuals and businesses.
 
-## ✨ Features
+With this tool, you can:
 
-* Generate captions from images
-* Simple usage
-* Fast output
+* Generate captions quickly
+* Create content for Instagram posts
+* Save time when writing captions
+* Use it freely without restrictions
 
-## 🛠️ Tech Stack
+## Features
 
-* Python
+* Fast caption generation
+* Simple and clean usage
+* Ready-to-use output
+* No login required
 
-## ▶️ Usage
+## Tech Stack
 
-Run the project locally and provide an image as input to receive a generated caption.
+* Lightweight application structure
 
-## 🔧 Setup
+## Purpose
 
-```bash
-git clone https://github.com/gabrielrawan/instagram-caption-generator.git
-cd instagram-caption-generator
-pip install -r requirements.txt
-```
+This project is designed to make content creation easier and more efficient, helping users focus on posting instead of writing.
 
-## 📄 License
+It can be used by content creators, small businesses, and anyone who wants to improve their social media workflow.
 
-MIT License
+## Author
+
+Built by Gabriel Rawan.
+
+---
+
+## PT-BR (Resumo)
+
+O **Instagram Caption Generator** e uma ferramenta gratuita para gerar legendas de forma rapida e simples.
+
+O objetivo e facilitar a criacao de conteudo, ajudando qualquer pessoa ou negocio a produzir posts com mais eficiencia.
